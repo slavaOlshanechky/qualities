@@ -1,12 +1,12 @@
 import axios from "axios";
-import * as Sentry from "@sentry/react";
+import logger from "./log.service";
 
 axios.interceptors.response.use((res) => res, function (error) {
     const expectedErrors = error.response &&
         error.response.status >= 400 &&
         error.response.status < 500
     if (!expectedErrors) {
-        Sentry.captureException(error)
+        logger.log(error)
         // console.log("Unexpected error")
     }
     return Promise.reject(error)
