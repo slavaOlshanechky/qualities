@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import EditForm from "../components/ui/editForm";
+import QualityForm from "../components/ui/qualityForm";
 import {useParams} from "react-router-dom";
 import qualityService from "../services/quality.service";
 import {toast} from "react-toastify";
@@ -34,14 +34,14 @@ const EditQualityPage = () => {
 
     useEffect(() => {
         getQuality(id).then((data) => {
-            setQuality(data.content)
+            setQuality(data)
         })
     }, [])
 
     return (
         <>
             <h1>Edit Quality Page</h1>
-            {quality !== null ? <EditForm
+            {quality !== null ? <QualityForm
                 data={quality}
                 onSubmit={handleSubmit}
             /> : "Loading ..."
