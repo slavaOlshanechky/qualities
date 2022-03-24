@@ -44,8 +44,19 @@ export const QualitiesProvider = ({children}) => {
             setError(message)
         }
     }
+
+    const addQuality = async (data) => {
+        try {
+            const {content} = await qualityService.create(data)
+            setQualities((prevState) => [...prevState, content])
+            return content
+        } catch (error) {
+            const {message} = error.response.data
+            setError(message)
+        }
+    }
     return (
-        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality}}>
+        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality, addQuality}}>
             {!isLoading ? children : <h1>Qualities Loading...</h1>}
         </QualitiesContext.Provider>
     )
