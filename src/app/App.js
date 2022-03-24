@@ -1,5 +1,5 @@
-import React, {useContext} from "react";
-import {Switch, Route, Redirect} from "react-router-dom";
+import React from "react";
+import {Redirect, Route, Switch} from "react-router-dom";
 import Container from "./components/common/container";
 import NavBar from "./components/ui/NavBar";
 import routes from "./routes";
@@ -12,7 +12,6 @@ const getRoutes = (routes) => {
         return <Route path={prop.path} component={prop.component} key={key}/>;
     });
 };
-
 
 function App() {
     return (

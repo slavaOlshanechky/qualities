@@ -2,24 +2,6 @@ import httpService from "./http.service";
 
 const qualityEndpoint = "quality/"
 
-// const updateQuality = async (content) => {
-//     try {
-//         const {data} = await httpService.put(qualityEndpoint, content)
-//         return data
-//     } catch (error) {
-//         console.log("Expected error")
-//     }
-// }
-//
-// const getQuality = async (id) => {
-//     try {
-//         const {data} = await httpService.get(qualityEndpoint)
-//         return data
-//     } catch (error) {
-//         console.log("Expected error")
-//     }
-// }
-
 const qualityService = {
     update: async (id, content) => {
         const {data} = await httpService.put(
@@ -36,5 +18,9 @@ const qualityService = {
         const {data} = await httpService.get(qualityEndpoint)
         return data
     },
+    create:async (content)=>{
+        const {data} = await httpService.post(qualityEndpoint,content)
+        return data
+    }
 }
 export default qualityService
