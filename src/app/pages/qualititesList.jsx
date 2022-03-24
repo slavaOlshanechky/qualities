@@ -14,7 +14,6 @@ const QualitiesListPage = () => {
 
     const {qualities,deleteQuality} = useQualities()
     const handleEdit = (param) => {
-        console.log(param);
         history.push(`/edit/${param}`);
     };
     const handleDelete = (id) => {

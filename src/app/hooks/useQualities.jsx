@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import qualityService from "../services/quality.service";
 
 const QualitiesContext = React.createContext()
@@ -11,6 +11,7 @@ export const QualitiesProvider = ({children}) => {
     const [qualities, setQualities] = useState([])
     const [error, setError] = useState(null)
     const [isLoading, setLoading] = useState(true)
+    const prevState = useRef()
 
     useEffect(() => {
         const getQualities = async () => {
@@ -56,20 +57,23 @@ export const QualitiesProvider = ({children}) => {
         }
     }
     const deleteQuality = async (id) => {
+        prevState.current = qualities
+        setQualities((prevState) => {
+            return prevState.filter(item => item._id !== id)
+        })
         try {
-            const {content} = await qualityService.delete(id)
-            setQualities((prevState) => {
-               return  prevState.filter(item => item._id !== content._id)
-            })
-            return content
+            await qualityService.delete(id)
+
         } catch (error) {
             const {message} = error.response.data
+            console.log(message)
             setError(message)
+            setQualities(prevState.current)
         }
     }
 
     return (
-        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality, addQuality}}>
+        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality, addQuality,deleteQuality}}>
             {!isLoading ? children : <h1>Qualities Loading...</h1>}
         </QualitiesContext.Provider>
     )
