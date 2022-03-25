@@ -1,10 +1,20 @@
 import React from "react";
-import CreateForm from "../components/ui/createForm";
+import QualityForm from "../components/ui/qualityForm";
+import {useQualities} from "../hooks/useQualities";
+import {useHistory} from "react-router-dom";
+
 const AddQualityPage = () => {
+    const history = useHistory()
+    const {addQuality}=useQualities()
+    const handleSubmit = (data) => {
+       addQuality(data).then((data)=>{
+           if(data)history.push("/")
+       })
+    }
     return (
         <>
             <h1>Add Quality</h1>
-            <CreateForm />
+            <QualityForm onSubmit={handleSubmit}/>
         </>
     );
 };
