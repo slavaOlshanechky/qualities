@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import qualityService from "../services/quality.service";
+import {toast} from "react-toastify";
 
 const QualitiesContext = React.createContext()
 
@@ -20,8 +21,7 @@ export const QualitiesProvider = ({children}) => {
                 setQualities(content)
                 setLoading(false)
             } catch (e) {
-                const {message} = error.response.data
-                setError(message)
+                errorCatcher(error)
             }
         }
         getQualities()
@@ -41,8 +41,7 @@ export const QualitiesProvider = ({children}) => {
             }))
             return content
         } catch (error) {
-            const {message} = error.response.data
-            setError(message)
+            errorCatcher(error)
         }
     }
 
@@ -52,28 +51,40 @@ export const QualitiesProvider = ({children}) => {
             setQualities((prevState) => [...prevState, content])
             return content
         } catch (error) {
-            const {message} = error.response.data
-            setError(message)
+            errorCatcher(error)
         }
     }
     const deleteQuality = async (id) => {
+        //pessimistic data update
         prevState.current = qualities
-        setQualities((prevState) => {
-            return prevState.filter(item => item._id !== id)
-        })
+        // setQualities((prevState) => {
+        //     return prevState.filter(item => item._id !== id)
+        // })
         try {
-            await qualityService.delete(id)
-
+            const {content} = await qualityService.delete(id)
+            setQualities((prevState) => {
+                return prevState.filter(item => item._id !== content._id)
+            })
         } catch (error) {
-            const {message} = error.response.data
-            console.log(message)
-            setError(message)
-            setQualities(prevState.current)
+            errorCatcher(error)
+            // setQualities(prevState.current)
         }
     }
 
+    function errorCatcher(error) {
+        const {message} = error.response.data
+        setError(message)
+    }
+
+    useEffect(() => {
+        if (error !== null) {
+            toast(error)
+            setError(null)
+        }
+    }, [error])
+
     return (
-        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality, addQuality,deleteQuality}}>
+        <QualitiesContext.Provider value={{qualities, getQuality, updateQuality, addQuality, deleteQuality}}>
             {!isLoading ? children : <h1>Qualities Loading...</h1>}
         </QualitiesContext.Provider>
     )
